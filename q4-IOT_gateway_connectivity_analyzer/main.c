@@ -20,9 +20,7 @@ int main(void)
     Graph network;
     graph_build_iot_network(&network);
 
-    printf("========================================================\n");
-    printf("      SMART AGRICULTURE: IoT GATEWAY ANALYZER           \n");
-    printf("========================================================\n");
+    printf("\n      SMART AGRICULTURE: IoT GATEWAY ANALYZER           \n\n");
     display_available_gateways();
 
     char line_buffer[128];
