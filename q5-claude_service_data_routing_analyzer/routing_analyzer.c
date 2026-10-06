@@ -318,9 +318,7 @@ void print_routing_table(const RoutingResult *res, const Graph *g)
 		return;
 	}
 
-	printf("======================================================================\n");
-	printf("              CLOUD SERVICE DATA ROUTING ANALYZER                    \n");
-	printf("======================================================================\n");
+	printf("\n              CLOUD SERVICE DATA ROUTING ANALYZER                    \n\n");
 
 	if (res->has_negative_cycle)
 	{
