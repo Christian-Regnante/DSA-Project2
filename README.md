@@ -41,8 +41,6 @@ algorithms, and reporting functions. The individual project README files
 contain the complete explanations, traces, expected results, and algorithm
 analysis.
 
-The combined Word document, `Project2_Assignment.docx`, provides the project
-documentation in one formatted file.
 
 ## Requirements
 
