@@ -79,13 +79,15 @@ Construction begins at the last non-leaf node: $\lfloor 7 / 2 \rfloor - 1 = \mat
 ### Task 2: Generate the Treatment Order
 By repeatedly extracting the root patient ($O(\log n)$ per extraction), patients are attended in strict descending priority order:
 
-1. **Patient P03: Eric — Priority 91**
-2. **Patient P05: Hassan — Priority 88**
-3. **Patient P07: Jean — Priority 76**
-4. **Patient P01: Amina — Priority 72**
-5. **Patient P04: Grace — Priority 63**
-6. **Patient P06: Irene — Priority 54**
-7. **Patient P02: Daniel — Priority 45**
+```text
+Patient P03 (Eric) — Priority 91
+Patient P05 (Hassan) — Priority 88
+Patient P07 (Jean) — Priority 76
+Patient P01 (Amina) — Priority 72
+Patient P04 (Grace) — Priority 63
+Patient P06 (Irene) — Priority 54
+Patient P02 (Daniel) — Priority 45
+```
 
 ---
 
@@ -142,4 +144,110 @@ make run
 ### Clean Build Artifacts:
 ```bash
 make clean
+```
+
+---
+
+## 5. Sample Console Output
+
+```text
+********************************************************************************
+     HOSPITAL EMERGENCY DEPARTMENT - TRIAGE PRIORITY SYSTEM (MAX-HEAP)
+********************************************************************************
+
+>>> [Input Received]: 7 waiting patients for assessment:
+    [P01] Amina    => Priority Score: 72
+    [P02] Daniel   => Priority Score: 45
+    [P03] Eric     => Priority Score: 91
+    [P04] Grace    => Priority Score: 63
+    [P05] Hassan   => Priority Score: 88
+    [P06] Irene    => Priority Score: 54
+    [P07] Jean     => Priority Score: 76
+
+>>> [TASK 1]: Building array-based Max-Heap from patient cohort...
+    Executing bottom-up heap construction in O(n) time...
+================================================================================
+ TASK 1: Resulting Initial Max-Heap
+ (Queue Size: 7, Max-Heap Invariant: SATISFIED [OK])
+--------------------------------------------------------------------------------
+ Index  | ID     | Patient Name     | Priority | Child Nodes         
+--------------------------------------------------------------------------------
+ [ 0]   | P03    | Eric             | 91       | L:P05(88), R:P07(76)
+ [ 1]   | P05    | Hassan           | 88       | L:P04(63), R:P02(45)
+ [ 2]   | P07    | Jean             | 76       | L:P06(54), R:P01(72)
+ [ 3]   | P04    | Grace            | 63       | None (Leaf)
+ [ 4]   | P02    | Daniel           | 45       | None (Leaf)
+ [ 5]   | P06    | Irene            | 54       | None (Leaf)
+ [ 6]   | P01    | Amina            | 72       | None (Leaf)
+================================================================================
+
+--- Binary Tree Representation (Level-by-Level) ---
+ Level 0: [P03: Eric (91)] 
+ Level 1: [P05: Hassan (88)] [P07: Jean (76)] 
+ Level 2: [P04: Grace (63)] [P02: Daniel (45)] [P06: Irene (54)] [P01: Amina (72)] 
+---------------------------------------------------
+
+>>> [TASK 2]: Generating Treatment Order (Repeated Max-Extraction)...
+    Extracting patients in descending order of triage priority score:
+
+Patient P03 (Eric) — Priority 91
+Patient P05 (Hassan) — Priority 88
+Patient P07 (Jean) — Priority 76
+Patient P01 (Amina) — Priority 72
+Patient P04 (Grace) — Priority 63
+Patient P06 (Irene) — Priority 54
+Patient P02 (Daniel) — Priority 45
+
+    (Queue Size: 0 — All initial patients scheduled in priority order)
+
+>>> [TASK 3]: New Critical Emergency Patient Arrives!
+    Patient ID: P08 | Name: Kofi | Priority Score: 98
+    Inserting into the existing Max-Heap and restoring heap property via sift_up()...
+================================================================================
+ TASK 3: Max-Heap After Inserting Kofi (P08: 98)
+ (Queue Size: 8, Max-Heap Invariant: SATISFIED [OK])
+--------------------------------------------------------------------------------
+ Index  | ID     | Patient Name     | Priority | Child Nodes         
+--------------------------------------------------------------------------------
+ [ 0]   | P08    | Kofi             | 98       | L:P03(91), R:P07(76)
+ [ 1]   | P03    | Eric             | 91       | L:P05(88), R:P02(45)
+ [ 2]   | P07    | Jean             | 76       | L:P06(54), R:P01(72)
+ [ 3]   | P05    | Hassan           | 88       | L:P04(63)
+ [ 4]   | P02    | Daniel           | 45       | None (Leaf)
+ [ 5]   | P06    | Irene            | 54       | None (Leaf)
+ [ 6]   | P01    | Amina            | 72       | None (Leaf)
+ [ 7]   | P04    | Grace            | 63       | None (Leaf)
+================================================================================
+
+--- Binary Tree Representation (Level-by-Level) ---
+ Level 0: [P08: Kofi (98)] 
+ Level 1: [P03: Eric (91)] [P07: Jean (76)] 
+ Level 2: [P05: Hassan (88)] [P02: Daniel (45)] [P06: Irene (54)] [P01: Amina (72)] 
+ Level 3: [P04: Grace (63)] 
+---------------------------------------------------
+
+>>> [TASK 4]: Patient P08 has been treated and cleared from the emergency queue...
+    Removing P08 and restoring Max-Heap property via sift_down()...
+    Successfully cleared: [P08] Kofi (Priority: 98)
+
+================================================================================
+ TASK 4: Max-Heap After Clearing P08
+ (Queue Size: 7, Max-Heap Invariant: SATISFIED [OK])
+--------------------------------------------------------------------------------
+ Index  | ID     | Patient Name     | Priority | Child Nodes         
+--------------------------------------------------------------------------------
+ [ 0]   | P03    | Eric             | 91       | L:P05(88), R:P07(76)
+ [ 1]   | P05    | Hassan           | 88       | L:P04(63), R:P02(45)
+ [ 2]   | P07    | Jean             | 76       | L:P06(54), R:P01(72)
+ [ 3]   | P04    | Grace            | 63       | None (Leaf)
+ [ 4]   | P02    | Daniel           | 45       | None (Leaf)
+ [ 5]   | P06    | Irene            | 54       | None (Leaf)
+ [ 6]   | P01    | Amina            | 72       | None (Leaf)
+================================================================================
+
+--- Binary Tree Representation (Level-by-Level) ---
+ Level 0: [P03: Eric (91)] 
+ Level 1: [P05: Hassan (88)] [P07: Jean (76)] 
+ Level 2: [P04: Grace (63)] [P02: Daniel (45)] [P06: Irene (54)] [P01: Amina (72)] 
+---------------------------------------------------
 ```

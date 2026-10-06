@@ -17,17 +17,15 @@ int main(void)
 	};
 	const int total_initial = sizeof(initial_patients) / sizeof(initial_patients[0]);
 	MaxHeap *triage_queue;
+	MaxHeap *order_queue;
 	Patient new_patient;
 	Patient cleared_patient;
 	Patient treated_patient;
-	int rank;
 	int i;
 
-	printf("\n********************************************************************************\n");
-	printf("     HOSPITAL EMERGENCY DEPARTMENT - TRIAGE PRIORITY SYSTEM (MAX-HEAP)\n");
-	printf("********************************************************************************\n\n");
+	printf("\n     HOSPITAL EMERGENCY DEPARTMENT - TRIAGE PRIORITY SYSTEM (MAX-HEAP)\n\n");
 
-	/* Display incoming patients */
+	/* Display raw input data */
 	printf(">>> [Input Received]: %d waiting patients for assessment:\n", total_initial);
 	for (i = 0; i < total_initial; i++)
 	{
@@ -48,15 +46,38 @@ int main(void)
 		return (EXIT_FAILURE);
 	}
 
-	printf(">>> [TASK 1]: Converting patient cohort into an array-based Max-Heap...\n");
-	printf("    Executing bottom-up heap construction in O(n) time...\n");
+	printf(">>> [TASK 1]: Building array-based Max-Heap from patient cohort\n");
+	printf("    Executing bottom-up heap construction in O(n) time\n");
 	heap_build(triage_queue, initial_patients, total_initial);
 
-	print_heap_array(triage_queue, "TASK 1: Initial Max-Heap Construction Result");
+	print_heap_array(triage_queue, "TASK 1: Resulting Initial Max-Heap");
 	print_heap_tree(triage_queue);
 
 	/* =========================================================================
-	 * TASK 3: NEW EMERGENCY PATIENT ARRIVAL (P08: Kofi, Score: 98)
+	 * TASK 2: GENERATE THE TREATMENT ORDER
+	 * ========================================================================= */
+	order_queue = heap_create(32);
+	if (!order_queue)
+	{
+		heap_destroy(triage_queue);
+		return (EXIT_FAILURE);
+	}
+	heap_build(order_queue, initial_patients, total_initial);
+
+	printf(">>> [TASK 2]: Generating Treatment Order (Repeated Max-Extraction)\n");
+	printf("    Extracting patients in descending order of triage priority score:\n\n");
+
+	while (heap_extract_max(order_queue, &treated_patient))
+	{
+		printf("Patient %s (%s) — Priority %d\n",
+		       treated_patient.id, treated_patient.name, treated_patient.score);
+	}
+	printf("\n    (Queue Size: %d — All initial patients scheduled in priority order)\n\n",
+	       order_queue->size);
+	heap_destroy(order_queue);
+
+	/* =========================================================================
+	 * TASK 3: NEW EMERGENCY PATIENT (P08: Kofi, Score: 98)
 	 * ========================================================================= */
 	strncpy(new_patient.id, "P08", sizeof(new_patient.id) - 1);
 	strncpy(new_patient.name, "Kofi", sizeof(new_patient.name) - 1);
@@ -65,7 +86,7 @@ int main(void)
 	printf(">>> [TASK 3]: New Critical Emergency Patient Arrives!\n");
 	printf("    Patient ID: %s | Name: %s | Priority Score: %d\n",
 	       new_patient.id, new_patient.name, new_patient.score);
-	printf("    Appending to leaf position and restoring Max-Heap property via sift_up()...\n");
+	printf("    Inserting into the existing Max-Heap and restoring heap property via sift_up()\n");
 	heap_insert(triage_queue, new_patient);
 
 	print_heap_array(triage_queue, "TASK 3: Max-Heap After Inserting Kofi (P08: 98)");
@@ -74,8 +95,8 @@ int main(void)
 	/* =========================================================================
 	 * TASK 4: PATIENT CLEARED (Remove P08)
 	 * ========================================================================= */
-	printf(">>> [TASK 4]: Patient P08 has been assessed and cleared from emergency queue...\n");
-	printf("    Removing P08 and restoring Max-Heap property via sift_down()...\n");
+	printf(">>> [TASK 4]: Patient P08 has been treated and cleared from the emergency queue\n");
+	printf("    Removing P08 and restoring Max-Heap property via sift_down()\n");
 	if (heap_remove_by_id(triage_queue, "P08", &cleared_patient))
 	{
 		printf("    Successfully cleared: [%s] %s (Priority: %d)\n\n",
@@ -88,24 +109,6 @@ int main(void)
 
 	print_heap_array(triage_queue, "TASK 4: Max-Heap After Clearing P08");
 	print_heap_tree(triage_queue);
-
-	/* =========================================================================
-	 * TASK 2: GENERATE THE TREATMENT ORDER
-	 * ========================================================================= */
-	printf(">>> [TASK 2]: Generating Treatment Order (Repeated Root Extraction)...\n");
-	printf("--------------------------------------------------------------------------------\n");
-	printf(" %-6s | %-6s | %-16s | %-10s\n", "Order", "ID", "Patient Name", "Priority");
-	printf("--------------------------------------------------------------------------------\n");
-
-	rank = 1;
-	while (heap_extract_max(triage_queue, &treated_patient))
-	{
-		printf(" #%-5d | %-6s | %-16s | %-10d\n",
-		       rank++, treated_patient.id, treated_patient.name, treated_patient.score);
-	}
-	printf("--------------------------------------------------------------------------------\n");
-	printf(" All patients attended. Emergency queue is now empty (Size: %d).\n\n",
-	       triage_queue->size);
 
 	/* Clean up resources */
 	heap_destroy(triage_queue);
