@@ -1,6 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -pedantic -std=c99 -g
 TARGET = routing_analyzer
+TEST_TARGET = test_runner
 SRCS = main.c routing_analyzer.c
 OBJS = $(SRCS:.c=.o)
 
@@ -15,7 +16,12 @@ $(TARGET): $(OBJS)
 run: $(TARGET)
 	./$(TARGET)
 
-clean:
-	rm -f $(OBJS) $(TARGET)
+test: routing_analyzer.o test_routing_analyzer.c routing_analyzer.h
+	$(CC) $(CFLAGS) -o $(TEST_TARGET) test_routing_analyzer.c routing_analyzer.o
+	./$(TEST_TARGET)
+	rm -f $(TEST_TARGET)
 
-.PHONY: all run clean
+clean:
+	rm -f $(OBJS) $(TARGET) $(TEST_TARGET)
+
+.PHONY: all run test clean
