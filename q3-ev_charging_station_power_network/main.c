@@ -4,10 +4,8 @@
 
 int main(void)
 {
-    printf("========================================================================\n");
-    printf("       SMART CITY: EV CHARGING STATION POWER NETWORK OPTIMIZER          \n");
-    printf("                  Minimum Spanning Tree Analysis (Kruskal)              \n");
-    printf("========================================================================\n");
+    printf("\n       SMART CITY: EV CHARGING STATION POWER NETWORK OPTIMIZER          \n");
+    printf("                  Minimum Spanning Tree Analysis (Kruskal)              \n\n");
 
     /* Execute and display all 4 tasks systematically */
     run_ev_network_analysis();
